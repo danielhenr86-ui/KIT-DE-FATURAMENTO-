@@ -429,6 +429,28 @@
         </div>
       </div>
 
+      <!-- Representante legal — aparece automaticamente quando CPF/CNPJ for CNPJ (14 dígitos) -->
+      <div id="representante_wrap" style="display:none;">
+        <div class="alert alert-info" style="margin-bottom:14px;">
+          🏢 Consorciado identificado como <strong>Pessoa Jurídica</strong>. Informe os dados do representante legal que assina pelo CNPJ.
+        </div>
+        <div class="field-row">
+          <div class="field full">
+            <label>Nome Completo do Representante Legal <span class="req">*</span></label>
+            <input type="text" id="f_repr_nome" placeholder="Nome completo conforme documento">
+            <div class="field-error" id="err_repr_nome">Informe o nome do representante</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field half">
+            <label>CPF do Representante Legal <span class="req">*</span></label>
+            <input type="text" id="f_repr_cpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCpfCnpj(this)">
+            <div class="field-error" id="err_repr_cpf">Informe o CPF do representante</div>
+            <div class="cpf-status" id="status_f_repr_cpf"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="divider"></div>
       <div class="subsection-title">Cotas</div>
 
@@ -974,7 +996,7 @@ function renderStep() {
   var num  = document.getElementById('pct_step_num');
   if (fill) fill.style.width = pct + '%';
   if (lbl)  lbl.textContent = 'Etapa ' + currentStep + ' de ' + totalSteps;
-  if (num)  num.textContent = pct + '% conclue\u00eddo';
+  if (num)  num.textContent = pct + '% conclu\u00eddo';
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -984,7 +1006,13 @@ function renderStep() {
 // ═══════════════════════════════════════════════════
 function validateCurrentStep() {
   if (currentStep === 1) {
-    let ok = req('f_cliente','err_cliente') & req('f_cpfcnpj','err_cpfcnpj') & req('f_grupo','err_grupo') & req('f_contato','err_contato');
+    var ok = req('f_cliente','err_cliente') & req('f_cpfcnpj','err_cpfcnpj') & req('f_grupo','err_grupo') & req('f_contato','err_contato');
+
+    // Se for CNPJ, exige dados do representante legal
+    var digits = (document.getElementById('f_cpfcnpj').value || '').replace(/\D/g,'');
+    if (digits.length === 14) {
+      ok = req('f_repr_nome','err_repr_nome') & req('f_repr_cpf','err_repr_cpf') & ok;
+    }
 
     if (juncaoCotas === null) {
       document.getElementById('err_juncao').style.display = 'block';
@@ -1444,37 +1472,53 @@ function maskCpfCnpj(el) {
   }
   el.value = v;
 
-  // Buscar div de status associado ao campo (convenção: id "status_" + id do campo)
+  var digits = el.value.replace(/\D/g,'');
+
+  // ── Status de validação visual ──
   var statusId = 'status_' + el.id;
   var statusEl = document.getElementById(statusId);
-  if (!statusEl) return;
-
-  var digits = el.value.replace(/\D/g,'');
-  if (digits.length === 0) {
-    statusEl.className = 'cpf-status';
-    statusEl.textContent = '';
-    return;
+  if (statusEl) {
+    if (digits.length === 0) {
+      statusEl.className = 'cpf-status';
+      statusEl.textContent = '';
+    } else if (digits.length === 11) {
+      if (validarCPF(digits)) {
+        statusEl.className = 'cpf-status ok';
+        statusEl.textContent = '\u2705 CPF v\u00e1lido';
+      } else {
+        statusEl.className = 'cpf-status err';
+        statusEl.textContent = '\u274c CPF inv\u00e1lido \u2014 verifique os d\u00edgitos';
+      }
+    } else if (digits.length === 14) {
+      if (validarCNPJ(digits)) {
+        statusEl.className = 'cpf-status ok';
+        statusEl.textContent = '\u2705 CNPJ v\u00e1lido';
+      } else {
+        statusEl.className = 'cpf-status err';
+        statusEl.textContent = '\u274c CNPJ inv\u00e1lido \u2014 verifique os d\u00edgitos';
+      }
+    } else {
+      statusEl.className = 'cpf-status';
+      statusEl.textContent = '';
+    }
   }
 
-  if (digits.length === 11) {
-    if (validarCPF(digits)) {
-      statusEl.className = 'cpf-status ok';
-      statusEl.textContent = '\u2705 CPF v\u00e1lido';
-    } else if (digits.length === 11) {
-      statusEl.className = 'cpf-status err';
-      statusEl.textContent = '\u274c CPF inv\u00e1lido — verifique os d\u00edgitos';
+  // ── Mostrar bloco do representante legal quando for CNPJ (só para o campo principal) ──
+  if (el.id === 'f_cpfcnpj') {
+    var reprWrap = document.getElementById('representante_wrap');
+    if (reprWrap) {
+      var isCNPJ = digits.length === 14;
+      reprWrap.style.display = isCNPJ ? 'block' : 'none';
+      // Limpar status e erros do representante ao voltar para CPF
+      if (!isCNPJ) {
+        var nomeEl = document.getElementById('f_repr_nome');
+        var cpfEl  = document.getElementById('f_repr_cpf');
+        if (nomeEl) nomeEl.value = '';
+        if (cpfEl)  cpfEl.value  = '';
+        var s = document.getElementById('status_f_repr_cpf');
+        if (s) { s.className = 'cpf-status'; s.textContent = ''; }
+      }
     }
-  } else if (digits.length === 14) {
-    if (validarCNPJ(digits)) {
-      statusEl.className = 'cpf-status ok';
-      statusEl.textContent = '\u2705 CNPJ v\u00e1lido';
-    } else {
-      statusEl.className = 'cpf-status err';
-      statusEl.textContent = '\u274c CNPJ inv\u00e1lido — verifique os d\u00edgitos';
-    }
-  } else {
-    statusEl.className = 'cpf-status';
-    statusEl.textContent = '';
   }
 }
 
@@ -1502,12 +1546,19 @@ function toggleTerceiro() {
 function buildReview() {
   const g = id => (document.getElementById(id)||{}).value || '—';
 
-  renderSummary('sum_cons', [
+  var consRows = [
     ['Cliente', g('f_cliente')], ['CPF/CNPJ', g('f_cpfcnpj')], ['Grupo', g('f_grupo')],
     ['Telefone', g('f_contato')], ['E-mail', g('f_email')],
-    ['Endereço', [g('f_endereco'), g('f_bairro'), g('f_cidade'), g('f_uf')].filter(v=>v&&v!=='—').join(', ') || '—'],
+    ['Endereço', [g('f_endereco'), g('f_bairro'), g('f_cidade'), g('f_uf')].filter(function(v){return v&&v!=='—';}).join(', ') || '—'],
     ['CEP', g('f_cep')]
-  ]);
+  ];
+  // Incluir representante legal se for CNPJ
+  var digitsReview = (document.getElementById('f_cpfcnpj').value||'').replace(/\D/g,'');
+  if (digitsReview.length === 14) {
+    consRows.push(['Representante Legal', g('f_repr_nome')]);
+    consRows.push(['CPF do Representante', g('f_repr_cpf')]);
+  }
+  renderSummary('sum_cons', consRows);
 
   const cotas = getCotasValues();
   renderSummary('sum_cotas', [
@@ -1580,7 +1631,13 @@ function sendWhatsApp() {
 
   msg += `━━━━━━━━━━━━━━━━━━━━\n👤 *DADOS DO CONSORCIADO*\n━━━━━━━━━━━━━━━━━━━━\n`;
   msg += `Cliente: ${g('f_cliente')}\n`;
-  msg += `CPF/CNPJ: ${g('f_cpfcnpj')}\n`;
+  msg += 'CPF/CNPJ: ' + g('f_cpfcnpj') + '\n';
+  // Representante legal (apenas se CNPJ)
+  var digitsSend = (document.getElementById('f_cpfcnpj').value||'').replace(/\D/g,'');
+  if (digitsSend.length === 14) {
+    msg += 'Representante Legal: ' + g('f_repr_nome') + '\n';
+    msg += 'CPF do Representante: ' + g('f_repr_cpf') + '\n';
+  }
   msg += `Grupo: ${g('f_grupo')}\n`;
   msg += `Junção de Cotas: ${juncaoCotas === true ? 'Sim' : 'Não'}\n`;
   msg += `Cota(s): ${cotas.length ? cotas.join(', ') : '—'}\n`;
@@ -1680,7 +1737,7 @@ var autoSaveTimer = null;
 
 function coletarDados() {
   var ids = [
-    'f_cliente','f_cpfcnpj','f_grupo','f_cota_unica',
+    'f_cliente','f_cpfcnpj','f_repr_nome','f_repr_cpf','f_grupo','f_cota_unica',
     'f_contato','f_email','f_cep','f_endereco','f_bairro','f_cidade','f_uf',
     'f_banco','f_agencia','f_conta','f_tipo_conta','f_titular','f_tit_nome','f_tit_cpf',
     'f_vend_nome','f_vend_cpf','f_vend_contato','f_vend_email',
@@ -1824,7 +1881,7 @@ function _initFormListeners() {
     });
   }
 
-  bindMask(['f_cpfcnpj','f_tit_cpf','f_vend_cpf'], maskCpfCnpj);
+  bindMask(['f_cpfcnpj','f_repr_cpf','f_tit_cpf','f_vend_cpf'], maskCpfCnpj);
   bindMask(['f_contato','f_vend_contato'],           maskPhone);
   bindMask(['f_cep','f_vend_cep'],                   maskCep);
 
