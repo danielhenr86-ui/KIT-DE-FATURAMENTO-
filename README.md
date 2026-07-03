@@ -1,5 +1,36 @@
 # Alpha Cartas de Crédito — Formulário Digital
 
+## Estrutura do repositório
+```
+alpha-consorcio/
+├── index.html          ← Formulário completo (único arquivo)
+└── README.md
+```
+
+## Deploy no GitHub Pages (passo a passo)
+
+### 1. Criar repositório no GitHub
+1. Acesse https://github.com/new
+2. Nome do repositório: `alpha-consorcio`
+3. Marque como **Public**
+4. Clique em **Create repository**
+
+### 2. Fazer upload do arquivo
+1. Na página do repositório, clique em **Add file → Upload files**
+2. Arraste o `index.html`
+3. Commit: "Deploy formulário Alpha"
+
+### 3. Ativar GitHub Pages
+1. Settings → Pages
+2. Source: **Deploy from a branch**
+3. Branch: **main** → pasta **/ (root)**
+4. Save
+
+### 4. URL final (disponível em ~2 minutos)
+```
+https://SEU-USUARIO.github.io/alpha-consorcio/
+```
+
 ---
 
 ## Configuração Make.com (cenário completo)
@@ -113,5 +144,5 @@ Se preferir sem limitação de operações, use n8n:
 - [ ] URL do GitHub Pages testada no browser
 - [ ] Webhook Make.com criado e copiado para CONFIG.MAKE_WEBHOOK_URL
 - [ ] Google Sheets criado com as colunas corretas
-- [ ] Z-API configurado com número +5562994738787
+- [ ] Z-API configurado com número +5562992022417
 - [ ] Teste de ponta a ponta com dados fictícios
