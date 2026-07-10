@@ -1,0 +1,25 @@
+{
+  "name": "Novo Pedido · Alpha Cartas de Crédito",
+  "short_name": "Alpha Pedido",
+  "description": "Pedido de Faturamento — Alpha Cartas de Crédito",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d1b5e",
+  "theme_color": "#0d1b5e",
+  "orientation": "portrait",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

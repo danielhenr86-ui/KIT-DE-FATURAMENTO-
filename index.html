@@ -634,6 +634,7 @@
         <div class="info-box">
           <h4>🏢 Conta Bancária Ômega — Dados Fixos</h4>
           <div class="info-grid">
+            <span class="key">Empresa</span><span class="val">OMEGA CONSÓRCIO VEÍCULOS E REPRESENTAÇÕES LTDA</span>
             <span class="key">CNPJ</span><span class="val">50.697.530/0001-09</span>
             <span class="key">Banco</span><span class="val">237 — Bradesco</span>
             <span class="key">Agência</span><span class="val">240</span>
@@ -1228,7 +1229,7 @@ function setVendedorOmega(value) {
   document.getElementById('vendedor_banco_wrap').style.display = value === false ? 'block' : 'none';
 
   const title = document.getElementById('vendedor_dados_title');
-  title.textContent = value === true ? 'Dados do Vendedor (Ômega)' : 'Dados do Vendedor';
+  title.textContent = value === true ? 'Dados do Vendedor do Veículo' : 'Dados do Vendedor';
 }
 
 // ═══════════════════════════════════════════════════
@@ -1578,6 +1579,7 @@ function buildReview() {
       ['Endereço', [g('f_vend_end'), g('f_vend_bairro'), g('f_vend_cidade'), g('f_vend_uf')].filter(v=>v&&v!=='—').join(', ') || '—']
     );
     if (vendedorOmega === true) {
+      vendRows.push(['Empresa (Ômega)', 'OMEGA CONSÓRCIO VEÍCULOS E REPRESENTAÇÕES LTDA']);
       vendRows.push(['Conta (Ômega)', '237 / Ag 240 / CC 133938-9']);
     } else {
       vendRows.push(['Banco', g('f_vend_banco')], ['Agência', g('f_vend_agencia')], ['Conta', g('f_vend_conta')]);
@@ -1661,7 +1663,7 @@ function sendWhatsApp() {
   if (vendEndCompleto) msg += `Endereço: ${vendEndCompleto}${g('f_vend_cep') ? ' - CEP ' + g('f_vend_cep') : ''}\n`;
 
   if (vendedorOmega === true) {
-    msg += `\n🏢 *Conta Ômega (fixa):*\nCNPJ: 50.697.530/0001-09\nBanco: 237 (Bradesco) | Ag: 240 | CC: 133938-9\n`;
+    msg += `\n🏢 *Conta Ômega (fixa):*\nEmpresa: OMEGA CONSÓRCIO VEÍCULOS E REPRESENTAÇÕES LTDA\nCNPJ: 50.697.530/0001-09\nBanco: 237 (Bradesco) | Ag: 240 | CC: 133938-9\n`;
   } else {
     msg += `Banco: ${g('f_vend_banco')}\n`;
     msg += `Agência: ${g('f_vend_agencia')}\n`;

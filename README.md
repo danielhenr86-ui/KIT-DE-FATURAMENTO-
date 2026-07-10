@@ -87,7 +87,7 @@ Colunas (ordem):
 - Body:
 ```json
 {
-  "phone": "5562992022417",
+  "phone": "5562994738787",
   "message": "🏎️ *ALPHA — NOVO PEDIDO DE FATURAMENTO*\n\n👤 *Cliente:* {{cliente}}\n📋 *CPF/CNPJ:* {{cpf_cnpj}}\n📞 *Contato:* {{contato}}\n\n🏦 *Banco:* {{banco}}\n🔢 *Ag/Conta:* {{agencia}} / {{conta}}\n\n🤝 *Vendedor:* {{vend_nome}}\n💰 *Solicitado:* {{solicitado}}\n📊 *Percentual:* 19%\n\n📎 *Documentos:* {{total_docs}} arquivo(s)\n🕐 *Data:* {{timestamp}}\n\n_Acesse a planilha para ver todos os detalhes._"
 }
 ```
@@ -144,5 +144,5 @@ Se preferir sem limitação de operações, use n8n:
 - [ ] URL do GitHub Pages testada no browser
 - [ ] Webhook Make.com criado e copiado para CONFIG.MAKE_WEBHOOK_URL
 - [ ] Google Sheets criado com as colunas corretas
-- [ ] Z-API configurado com número +5562992022417
+- [ ] Z-API configurado com número +5562994738787
 - [ ] Teste de ponta a ponta com dados fictícios

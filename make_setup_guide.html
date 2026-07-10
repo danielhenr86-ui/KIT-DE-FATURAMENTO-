@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia Make.com — Alpha Consórcio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
+  :root{--blue:#0d1b5e;--gold:#c9a227;--green:#25D366;--purple:#6c4de6;--orange:#e07b22;--red:#e53e3e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;background:#f0f2f8;padding:24px 16px 48px;color:#1a1f3a;}
+  h1{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:800;color:var(--blue);margin-bottom:6px;}
+  .subtitle{font-size:14px;color:#6b7aaa;margin-bottom:32px;}
+
+  .pipeline{display:flex;flex-direction:column;gap:0;max-width:700px;margin:0 auto;}
+
+  .step-card{
+    background:#fff;border-radius:16px;padding:0;overflow:hidden;
+    box-shadow:0 4px 20px rgba(0,0,0,.08);
+    margin-bottom:8px;position:relative;
+  }
+
+  .step-card::before{
+    content:'';position:absolute;left:50%;top:100%;
+    width:2px;height:8px;background:#c8cedf;
+    transform:translateX(-50%);z-index:10;
+  }
+  .step-card:last-child::before{display:none;}
+
+  .arrow-down{
+    text-align:center;font-size:20px;line-height:1;
+    color:#c8cedf;padding:0;margin:-4px 0;
+  }
+
+  .card-header{
+    display:flex;align-items:center;gap:14px;
+    padding:18px 22px;
+  }
+
+  .card-icon{
+    width:46px;height:46px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;flex-shrink:0;
+  }
+
+  .card-title{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;margin-bottom:2px;}
+  .card-sub{font-size:12px;color:#6b7aaa;}
+
+  .card-step-num{
+    margin-left:auto;font-family:'Montserrat',sans-serif;
+    font-size:11px;font-weight:700;
+    background:#f0f2f8;color:#6b7aaa;
+    padding:4px 10px;border-radius:20px;flex-shrink:0;
+  }
+
+  .card-body{padding:0 22px 20px;}
+
+  .config-row{
+    display:flex;gap:8px;align-items:flex-start;
+    font-size:13px;margin-bottom:8px;
+  }
+  .config-key{
+    font-weight:600;color:#6b7aaa;font-size:11px;
+    text-transform:uppercase;letter-spacing:.5px;
+    min-width:100px;flex-shrink:0;padding-top:1px;
+  }
+  .config-val{color:#1a1f3a;flex:1;word-break:break-all;}
+  .tag{
+    display:inline-block;background:#eef0fa;color:var(--blue);
+    padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;
+    font-family:'Montserrat',sans-serif;margin-right:4px;margin-bottom:2px;
+  }
+  code{
+    background:#f0f2f8;padding:2px 6px;border-radius:4px;
+    font-size:12px;color:#c0392b;font-family:monospace;
+  }
+  .divider{height:1px;background:#f0f2f8;margin:12px 0;}
+
+  /* Colors per module */
+  .m1 .card-icon{background:#e8ecfa;} .m1 .card-title{color:var(--blue);}
+  .m2 .card-icon{background:#e6f4ea;} .m2 .card-title{color:#2e7d32;}
+  .m3 .card-icon{background:#e6f4ea;} .m3 .card-title{color:#2e7d32;}
+  .m4 .card-icon{background:#e8f5e9;} .m4 .card-title{color:var(--green);}
+  .m5 .card-icon{background:#fff3e0;} .m5 .card-title{color:var(--orange);}
+
+  .badge-free{
+    background:#e8f5e9;color:#2e7d32;
+    padding:3px 10px;border-radius:20px;
+    font-size:11px;font-weight:700;
+    font-family:'Montserrat',sans-serif;
+    border:1px solid #a5d6a7;display:inline-block;margin-left:8px;
+  }
+
+  .important{
+    background:#fffbec;border:1.5px solid var(--gold);
+    border-radius:10px;padding:14px 18px;font-size:13px;
+    line-height:1.6;margin:24px auto;max-width:700px;
+  }
+
+  .step-final{
+    background:var(--blue);color:#fff;
+    border-radius:16px;padding:24px 28px;
+    max-width:700px;margin:24px auto 0;
+  }
+  .step-final h3{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;margin-bottom:12px;color:var(--gold);}
+  .checklist{list-style:none;display:flex;flex-direction:column;gap:8px;}
+  .checklist li{font-size:13px;display:flex;gap:10px;align-items:flex-start;line-height:1.5;}
+  .checklist li::before{content:'☐';font-size:16px;color:var(--gold);flex-shrink:0;margin-top:-1px;}
+
+  @media(max-width:540px){.config-key{min-width:80px;}}
+</style>
+</head>
+<body>
+
+<div style="max-width:700px;margin:0 auto 24px;">
+  <h1>⚙️ Configuração Make.com</h1>
+  <div class="subtitle">Cenário: Alpha Consórcio → Google Sheets + WhatsApp</div>
+</div>
+
+<div class="important">
+  📌 <strong>Antes de começar:</strong> crie uma conta gratuita em <strong>make.com</strong> (plano Free = 1.000 operações/mês gratuitas). Cada envio do formulário consome ~4 operações.
+</div>
+
+<div class="pipeline">
+
+  <!-- M1: Webhook -->
+  <div class="step-card m1">
+    <div class="card-header">
+      <div class="card-icon">🔗</div>
+      <div>
+        <div class="card-title">1. Webhooks — Custom Webhook</div>
+        <div class="card-sub">Recebe os dados do formulário</div>
+      </div>
+      <div class="card-step-num">TRIGGER</div>
+    </div>
+    <div class="card-body">
+      <div class="config-row"><span class="config-key">Tipo</span><span class="config-val">Custom webhook</span></div>
+      <div class="config-row"><span class="config-key">Nome</span><span class="config-val">alpha-pedido-faturamento</span></div>
+      <div class="config-row"><span class="config-key">Ação</span><span class="config-val">Copie a URL gerada → cole em <code>CONFIG.MAKE_WEBHOOK_URL</code> no index.html</span></div>
+      <div class="divider"></div>
+      <div style="font-size:12px;color:#6b7aaa;">💡 Clique em <strong>"Redetermine data structure"</strong> e envie um pedido teste pelo formulário para o Make.com mapear automaticamente todos os campos.</div>
+    </div>
+  </div>
+
+  <div class="arrow-down">▼</div>
+
+  <!-- M2: Google Drive -->
+  <div class="step-card m2">
+    <div class="card-header">
+      <div class="card-icon">📁</div>
+      <div>
+        <div class="card-title">2. Google Drive — Create a Folder + Upload Files</div>
+        <div class="card-sub">Salva os documentos anexados em pasta organizada</div>
+      </div>
+      <div class="card-step-num">MÓDULO 2</div>
+    </div>
+    <div class="card-body">
+      <div class="config-row"><span class="config-key">Módulo</span><span class="config-val">Google Drive → Upload a File</span></div>
+      <div class="config-row"><span class="config-key">File Name</span><span class="config-val"><code>{{nome}}</code> (do array de documentos)</span></div>
+      <div class="config-row"><span class="config-key">Data</span><span class="config-val"><code>{{base64}}</code> → selecione "Base64"</span></div>
+      <div class="config-row"><span class="config-key">Pasta</span><span class="config-val"><code>Alpha Consórcio/Pedidos/{{timestamp}}/{{cliente}}</code></span></div>
+      <div class="divider"></div>
+      <div style="font-size:12px;color:#6b7aaa;">💡 Use um Iterator + Array Aggregator para processar todos os arquivos do payload de uma vez.</div>
+    </div>
+  </div>
+
+  <div class="arrow-down">▼</div>
+
+  <!-- M3: Google Sheets -->
+  <div class="step-card m3">
+    <div class="card-header">
+      <div class="card-icon">📊</div>
+      <div>
+        <div class="card-title">3. Google Sheets — Add a Row</div>
+        <div class="card-sub">Registra todos os dados na planilha</div>
+      </div>
+      <div class="card-step-num">MÓDULO 3</div>
+    </div>
+    <div class="card-body">
+      <div class="config-row"><span class="config-key">Planilha</span><span class="config-val">Alpha - Pedidos de Faturamento</span></div>
+      <div class="config-row"><span class="config-key">Aba</span><span class="config-val">Pedidos</span></div>
+      <div class="divider"></div>
+      <div style="font-size:12px;font-weight:600;color:var(--blue);margin-bottom:10px;">Mapeamento de colunas:</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font-size:12px;">
+        <div><span style="color:#6b7aaa;">A</span> Data/Hora</div><div><code>{{timestamp}}</code></div>
+        <div><span style="color:#6b7aaa;">B</span> Cliente</div><div><code>{{cliente}}</code></div>
+        <div><span style="color:#6b7aaa;">C</span> CPF/CNPJ</div><div><code>{{cpf_cnpj}}</code></div>
+        <div><span style="color:#6b7aaa;">D</span> Grupo</div><div><code>{{grupo}}</code></div>
+        <div><span style="color:#6b7aaa;">E</span> Cota</div><div><code>{{cota}}</code></div>
+        <div><span style="color:#6b7aaa;">F</span> Telefone</div><div><code>{{contato}}</code></div>
+        <div><span style="color:#6b7aaa;">G</span> Email</div><div><code>{{email}}</code></div>
+        <div><span style="color:#6b7aaa;">H</span> Endereço</div><div><code>{{endereco}}</code></div>
+        <div><span style="color:#6b7aaa;">I</span> Banco</div><div><code>{{banco}}</code></div>
+        <div><span style="color:#6b7aaa;">J</span> Agência</div><div><code>{{agencia}}</code></div>
+        <div><span style="color:#6b7aaa;">K</span> Conta</div><div><code>{{conta}}</code></div>
+        <div><span style="color:#6b7aaa;">L</span> Vendedor</div><div><code>{{vend_nome}}</code></div>
+        <div><span style="color:#6b7aaa;">M</span> CPF Vendedor</div><div><code>{{vend_cpf}}</code></div>
+        <div><span style="color:#6b7aaa;">N</span> Cotação</div><div><code>{{cotacao}}</code></div>
+        <div><span style="color:#6b7aaa;">O</span> Solicitado</div><div><code>{{solicitado}}</code></div>
+        <div><span style="color:#6b7aaa;">P</span> Percentual</div><div><code>19%</code></div>
+        <div><span style="color:#6b7aaa;">Q</span> Link Docs</div><div>Link Google Drive (M2)</div>
+        <div><span style="color:#6b7aaa;">R</span> Status</div><div><code>Novo</code></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down">▼</div>
+
+  <!-- M4: WhatsApp Z-API -->
+  <div class="step-card m4">
+    <div class="card-header">
+      <div class="card-icon">📱</div>
+      <div>
+        <div class="card-title">4. HTTP — Z-API WhatsApp<span class="badge-free">GRÁTIS</span></div>
+        <div class="card-sub">Envia notificação para +55 62 99473-8787</div>
+      </div>
+      <div class="card-step-num">MÓDULO 4</div>
+    </div>
+    <div class="card-body">
+      <div class="config-row"><span class="config-key">Módulo</span><span class="config-val">Make → HTTP → Make a request</span></div>
+      <div class="config-row"><span class="config-key">URL</span><span class="config-val"><code>https://api.z-api.io/instances/{{ID}}/token/{{TOKEN}}/send-text</code></span></div>
+      <div class="config-row"><span class="config-key">Método</span><span class="config-val">POST</span></div>
+      <div class="config-row"><span class="config-key">Headers</span><span class="config-val"><code>Client-Token: {{CLIENT_TOKEN}}</code></span></div>
+      <div class="divider"></div>
+      <div style="font-size:12px;font-weight:600;color:#2e7d32;margin-bottom:8px;">Body (JSON):</div>
+      <pre style="background:#f0f8f0;padding:12px;border-radius:8px;font-size:11px;color:#1a3a1f;overflow-x:auto;line-height:1.6;">{
+  "phone": "5562994738787",
+  "message": "🏎️ *ALPHA — NOVO PEDIDO*\n\n👤 {{cliente}}\n📋 {{cpf_cnpj}}\n📞 {{contato}}\n\n🏦 {{banco}}\n🔢 {{agencia}} / {{conta}}\n\n🤝 {{vend_nome}}\n💰 {{solicitado}}\n📊 19%\n📎 {{total_docs}} doc(s)"
+}</pre>
+      <div class="divider"></div>
+      <div style="font-size:12px;color:#6b7aaa;">💡 Crie conta gratuita em <strong>z-api.io</strong> → Criar Instância → conectar pelo QR Code → copiar Instance ID, Token e Client-Token</div>
+    </div>
+  </div>
+
+  <div class="arrow-down">▼</div>
+
+  <!-- M5: Gmail opcional -->
+  <div class="step-card m5">
+    <div class="card-header">
+      <div class="card-icon">📧</div>
+      <div>
+        <div class="card-title">5. Gmail — Send an Email (Opcional)</div>
+        <div class="card-sub">Confirmação automática para o cliente</div>
+      </div>
+      <div class="card-step-num">OPCIONAL</div>
+    </div>
+    <div class="card-body">
+      <div class="config-row"><span class="config-key">Para</span><span class="config-val"><code>{{email}}</code> (filtrar se não estiver vazio)</span></div>
+      <div class="config-row"><span class="config-key">Assunto</span><span class="config-val">Pedido de Faturamento Alpha — Recebido ✅</span></div>
+      <div class="config-row"><span class="config-key">Condição</span><span class="config-val">Adicionar filtro: <code>{{email}}</code> não está vazio</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Checklist final -->
+<div class="step-final">
+  <h3>✅ Checklist de Ativação</h3>
+  <ul class="checklist">
+    <li>Criar conta no make.com (gratuito)</li>
+    <li>Criar novo cenário → adicionar módulo Webhook → copiar URL</li>
+    <li>Colar URL em CONFIG.MAKE_WEBHOOK_URL no index.html</li>
+    <li>Publicar index.html no GitHub Pages</li>
+    <li>Criar planilha "Alpha - Pedidos de Faturamento" no Google Sheets</li>
+    <li>Conectar Google Drive e Google Sheets ao Make.com</li>
+    <li>Criar conta Z-API → conectar instância WhatsApp pelo QR Code</li>
+    <li>Enviar pedido teste pelo formulário</li>
+    <li>Verificar: linha criada na planilha + WhatsApp recebido</li>
+    <li>Ativar o cenário (toggle ON no Make.com)</li>
+  </ul>
+</div>
+
+</body>
+</html>
